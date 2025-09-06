@@ -1,4 +1,4 @@
-package com.messenger.whatsapp_clone;
+package com.messenger.whatsappclone;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
