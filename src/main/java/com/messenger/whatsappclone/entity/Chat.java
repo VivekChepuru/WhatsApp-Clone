@@ -17,7 +17,7 @@ public class Chat {
     private Long id;
 
     private String chatName;
-    private boolean isGroup;
+    private boolean Group;
 
     @ManyToMany
     private List<User> participant;
