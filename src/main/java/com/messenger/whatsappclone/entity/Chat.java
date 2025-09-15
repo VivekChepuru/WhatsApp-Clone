@@ -20,5 +20,5 @@ public class Chat {
     private boolean Group;
 
     @ManyToMany
-    private List<User> participant;
+    private List<User> participants;
 }

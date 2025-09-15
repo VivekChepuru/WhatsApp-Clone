@@ -36,33 +36,53 @@ public class ChatServiceImpl implements ChatService {
         Chat chat = new Chat();
         chat.setChatName(chatName);
         chat.setGroup(isGroup);
-        chat.setParticipant(participants);
+        chat.setParticipants(participants);
 
         return chatRepository.save(chat);
     }
 
     @Override
     public Chat getChatById(Long chatId) {
-        return null;
+        return chatRepository.findById(chatId)
+                .orElseThrow(()-> new IllegalArgumentException("Chat with ID " + chatId + " not found."));
     }
 
     @Override
     public List<Chat> getAllChats() {
-        return List.of();
+        return chatRepository.findAll();
     }
 
     @Override
     public void deleteChat(Long chatId) {
-
+        Chat chat = getChatById(chatId);
+        chatRepository.delete(chat);
     }
 
     @Override
     public Chat addUserToChat(Long chatId, User user) {
-        return null;
+        Chat chat = getChatById(chatId);
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(()-> new IllegalArgumentException("User not found."));
+
+        if (chat.getParticipants().contains(existingUser)) {
+            throw new IllegalArgumentException("User already in chat.");
+        }
+
+        chat.getParticipants().add(existingUser);
+        return chatRepository.save(chat);
     }
 
     @Override
     public Chat removeUserFromChat(Long chatId, User user) {
-        return null;
+        Chat chat = getChatById(chatId);
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(()-> new IllegalArgumentException("User not found."));
+
+        if (!chat.getParticipants().contains(existingUser)) {
+            throw new IllegalArgumentException("User is not part of this chart.");
+        }
+
+        chat.getParticipants().remove(existingUser);
+        return chatRepository.save(chat);
     }
 }

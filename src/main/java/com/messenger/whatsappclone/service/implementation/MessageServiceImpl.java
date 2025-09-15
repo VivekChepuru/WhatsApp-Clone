@@ -45,7 +45,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getMessageByChatId(Long chatId) {
+    public List<Message> getMessagesByChatId(Long chatId) {
         return messageRepository.findByChatId(chatId);
     }
 
