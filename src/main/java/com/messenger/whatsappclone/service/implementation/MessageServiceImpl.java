@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -25,15 +27,15 @@ public class MessageServiceImpl implements MessageService {
     private ChatRepository chatRepository;
 
     @Override
-    public Message sendMessage(Long senderId, Long chatId, String content) {
+    public Message sendMessage(UUID senderId, UUID chatId, String content) {
         if (content == null || content.trim().isEmpty()){
             throw new IllegalArgumentException("Message content cannot be empty");
         }
 
-        User sender = userRepository.findById(senderId)
+        User sender = userRepository.findByUserId(senderId.toString())
                 .orElseThrow(()-> new IllegalArgumentException("Sender not found"));
 
-        Chat chat = chatRepository.findById(chatId)
+        Chat chat = chatRepository.findByChatId(chatId.toString())
                 .orElseThrow(()-> new IllegalArgumentException("Chat not found"));
 
         Message message = new Message();
@@ -45,19 +47,25 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getMessagesByChatId(Long chatId) {
-        return messageRepository.findByChatId(chatId);
+    public Optional<Message> getMessageById(UUID messageId) {
+        return Optional.ofNullable(messageRepository.findByMessageId(messageId.toString())
+                .orElseThrow(() -> new IllegalArgumentException("Message not found")));
     }
 
     @Override
-    public Message getMessageById(Long messageId) {
-        return messageRepository.findById(messageId)
-                .orElseThrow(()-> new IllegalArgumentException("Message not found"));
+    public List<Message> getMessagesByChat(Chat chat) {
+        return messageRepository.findByChatOrderByTimestampAsc(chat);
     }
 
     @Override
-    public void deleteMessage(Long messageId) {
-        Message message = messageRepository.findById(messageId)
+    public List<Message> getLatestMessages(Chat chat, int limit) {
+        List<Message> recent = messageRepository.findTop50ByChatOrderByTimestampDesc(chat);
+        return recent.stream().limit(limit).toList();
+    }
+
+    @Override
+    public void deleteMessage(UUID messageId) {
+        Message message = messageRepository.findByMessageId(messageId.toString())
                 .orElseThrow(()-> new IllegalArgumentException("Message not found"));
         messageRepository.delete(message);
     }

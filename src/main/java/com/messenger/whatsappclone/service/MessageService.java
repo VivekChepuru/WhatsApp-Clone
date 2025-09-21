@@ -1,15 +1,21 @@
 package com.messenger.whatsappclone.service;
 
+import com.messenger.whatsappclone.entity.Chat;
 import com.messenger.whatsappclone.entity.Message;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface MessageService {
-    Message sendMessage(Long senderId, Long chatId, String content);
 
-    List<Message> getMessagesByChatId(Long chatId);
+    Message sendMessage(UUID senderId, UUID chatId, String content);
 
-    Message getMessageById(Long messageId);
+    Optional<Message> getMessageById(UUID messageId);
 
-    void deleteMessage(Long messageId);
+    List<Message> getMessagesByChat(Chat chat);
+
+    List<Message> getLatestMessages(Chat chat, int limit);
+
+    void deleteMessage(UUID messageId);
 }

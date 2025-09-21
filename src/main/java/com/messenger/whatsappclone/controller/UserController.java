@@ -1,48 +1,60 @@
 package com.messenger.whatsappclone.controller;
 
+import com.messenger.whatsappclone.dto.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.UserStatus;
 import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.registerUser(user));
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody RegisterUserRequest dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(dto));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable UUID userId) {
+        return ResponseEntity.ok(userService.getUserByUserId(userId).orElseThrow());
     }
 
     @GetMapping("/phone/{phoneNumber}")
     public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phoneNumber) {
-        return ResponseEntity.ok(userService.getUserByPhoneNumber(phoneNumber));
+        return ResponseEntity.ok(userService.getUserByPhoneNumber(phoneNumber).orElseThrow());
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<User> updateUserStatus(@PathVariable Long id, @RequestParam boolean online) {
-        return ResponseEntity.ok(userService.updateUserStatus(id, online));
+    @PutMapping("/{userId}/status")
+    public ResponseEntity<User> updateUserStatus(
+            @PathVariable UUID userId,
+            @RequestParam UserStatus userStatus) {
+        return ResponseEntity.ok(userService.updateUserStatus(userId, userStatus));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
 }

@@ -1,13 +1,14 @@
 package com.messenger.whatsappclone.controller;
 
 import com.messenger.whatsappclone.entity.Chat;
-import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/chats")
@@ -20,13 +21,14 @@ public class ChatController {
     public ResponseEntity<Chat> createChat(
             @RequestParam String chatName,
             @RequestParam boolean isGroup,
-            @RequestBody List<User> participants) {
-        return ResponseEntity.ok(chatService.createChat(chatName, isGroup, participants));
+            @RequestBody List<UUID> participantIds) {
+        Chat chat = chatService.createChat(chatName, isGroup, participantIds);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chat);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Chat> getChatById(@PathVariable Long id) {
-        return ResponseEntity.ok(chatService.getChatById(id));
+    @GetMapping("/{chatId}")
+    public ResponseEntity<Chat> getChatById(@PathVariable UUID chatId) {
+        return ResponseEntity.ok(chatService.getChatByChatId(chatId).orElseThrow());
     }
 
     @GetMapping
@@ -34,20 +36,20 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getAllChats());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteChat(@PathVariable Long id) {
-        chatService.deleteChat(id);
-        return ResponseEntity.ok("Chat with ID " + id + " deleted successfully.");
+    @DeleteMapping("/{chatId}")
+    public ResponseEntity<Void> deleteChat(@PathVariable UUID chatId) {
+        chatService.deleteChat(chatId);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{chatId}/add-user")
-    public ResponseEntity<Chat> addUserToChat(@PathVariable Long chatId, @RequestBody User user) {
-        return ResponseEntity.ok(chatService.addUserToChat(chatId, user));
+    @PostMapping("/{chatId}/add-user/{userId}")
+    public ResponseEntity<Chat> addUserToChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
+        return ResponseEntity.ok(chatService.addUserToChat(chatId, userId));
     }
 
-    @PostMapping("/{chatId}/remove-user")
-    public ResponseEntity<Chat> removeUserFromChat(@PathVariable Long chatId, @RequestBody User user) {
-        return ResponseEntity.ok(chatService.removeUserFromChat(chatId, user));
+    @PostMapping("/{chatId}/remove-user/{userId}")
+    public ResponseEntity<Chat> removeUserFromChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
+        return ResponseEntity.ok(chatService.removeUserFromChat(chatId, userId));
     }
 
 }
