@@ -6,12 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
-
-    // Fetch by UUID
-    Optional<Message> findByMessageId(String messageId);
+public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     // Get all messages in a chat (sorted by timestamp)
     List<Message> findByChatOrderByTimestampAsc(Chat chat);

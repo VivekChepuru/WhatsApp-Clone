@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface UserService {
     User registerUser(RegisterUserRequest dto);
 
-    Optional<User> getUserByUserId(UUID userId);
+    Optional<User> getUser(UUID userId);
 
     Optional<User> getUserByPhoneNumber(String phoneNumber);
 

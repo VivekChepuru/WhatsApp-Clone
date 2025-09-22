@@ -18,10 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MessageController {
 
-    @Autowired
     private MessageService messageService;
-
-    @Autowired
     private final ChatService chatService;
 
     @PostMapping
@@ -39,7 +36,7 @@ public class MessageController {
 
     @GetMapping("/chat/{chatId}")
     public ResponseEntity<List<Message>> getMessagesByChatId(@PathVariable UUID chatId) {
-        Chat chat = chatService.getChatByChatId(chatId)
+        Chat chat = chatService.getChat(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found with ID: " + chatId));
 
         return ResponseEntity.ok(messageService.getMessagesByChat(chat));
@@ -47,14 +44,14 @@ public class MessageController {
 
     @GetMapping("/{messageId}")
     public ResponseEntity<Message> getMessageById(@PathVariable UUID messageId) {
-        return messageService.getMessageById(messageId)
+        return messageService.getMessage(messageId)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalArgumentException("Message not found with ID: " + messageId));
     }
 
     @DeleteMapping("/{messageId}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable String messageId) {
-        messageService.deleteMessage(UUID.fromString(messageId));
+    public ResponseEntity<Void> deleteMessage(@PathVariable UUID messageId) {
+        messageService.deleteMessage(messageId);
         return ResponseEntity.noContent().build();
     }
 }

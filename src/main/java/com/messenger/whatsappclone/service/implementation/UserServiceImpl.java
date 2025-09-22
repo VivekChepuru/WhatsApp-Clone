@@ -1,5 +1,6 @@
 package com.messenger.whatsappclone.service.implementation;
 
+import ch.qos.logback.core.joran.conditional.IfAction;
 import com.messenger.whatsappclone.dto.RegisterUserRequest;
 import com.messenger.whatsappclone.dto.UserStatus;
 import com.messenger.whatsappclone.entity.User;
@@ -26,37 +27,38 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Invalid phone number. Must be 10 digits.");
         }
 
-        if (userRepository.findByPhoneNumber(dto.getPhoneNumber()).isPresent()) {
+        if (userRepository.existsByPhoneNumber(dto.getPhoneNumber())) {
             throw new IllegalArgumentException("Phone number already registered.");
         }
         if (dto.getUsername() == null || dto.getUsername().trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty.");
         }
+        if (userRepository.existsByUsername(dto.getUsername().trim())) {
+            throw new IllegalArgumentException("Username already taken.");
+        }
+
         User user = new User();
-        user.setUserId(UUID.randomUUID().toString());
         user.setUsername(dto.getUsername().trim());
         user.setPhoneNumber(dto.getPhoneNumber());
-        user.setPassword(dto.getPassword()); // TODO: hash this before production!
+        user.setPassword(dto.getPassword()); // TODO: hash this before prod!
         user.setUserStatus(UserStatus.OFFLINE); // enforce system-controlled value
 
         return userRepository.save(user);
     }
 
     @Override
-    public Optional<User> getUserByUserId(UUID userId) {
-        return Optional.ofNullable(userRepository.findByUserId(userId.toString())
-                .orElseThrow(() -> new IllegalArgumentException("User not found.")));
+    public Optional<User> getUser(UUID userId) {
+        return userRepository.findById(userId);
     }
 
     @Override
     public Optional<User> getUserByPhoneNumber(String phoneNumber) {
-        return Optional.ofNullable(userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow((() -> new IllegalArgumentException("User not found."))));
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 
     @Override
     public User updateUserStatus(UUID userId, UserStatus userStatus) {
-        User user = userRepository.findByUserId(userId.toString())
+        User user = userRepository.findById(userId)
                         .orElseThrow(()-> new IllegalArgumentException("User with ID " + userId + " not found."));
         user.setUserStatus(userStatus);
         return userRepository.save(user);
@@ -64,9 +66,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID userId) {
-        User user = userRepository.findByUserId(userId.toString())
-                        .orElseThrow(()-> new IllegalArgumentException("User with ID " + userId + " not found."));
-        userRepository.delete(user);
+       if (!userRepository.existsById(userId)) {
+           throw new IllegalArgumentException ("User with ID " + userId + " not found.");
+       }
+        userRepository.deleteById(userId);
     }
 
     @Override

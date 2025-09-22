@@ -11,7 +11,7 @@ public interface MessageService {
 
     Message sendMessage(UUID senderId, UUID chatId, String content);
 
-    Optional<Message> getMessageById(UUID messageId);
+    Optional<Message> getMessage(UUID messageId);
 
     List<Message> getMessagesByChat(Chat chat);
 

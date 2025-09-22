@@ -14,9 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;    // Internal DB primary key
+    @Column(name = "id", nullable = false, updatable = false)
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "user_id", nullable = false, unique = true, updatable = false)
     private String userId;  // External UUID for APIs
@@ -35,10 +36,9 @@ public class User {
     private UserStatus userStatus; // default OFFLINE when user registers
 
     @PrePersist
-    public void generateUserId() {
-        if (this.userId == null) {
-            this.userId = UUID.randomUUID().toString();
-        }
+    public void prePersist() {
+        if (this.id == null) this.id = UUID.randomUUID();
+
         if (this.userStatus == null) {
             this.userStatus = UserStatus.OFFLINE; // Default status
         }

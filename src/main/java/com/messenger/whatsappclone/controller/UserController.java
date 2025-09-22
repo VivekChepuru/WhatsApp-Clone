@@ -4,7 +4,6 @@ import com.messenger.whatsappclone.dto.RegisterUserRequest;
 import com.messenger.whatsappclone.dto.UserStatus;
 import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable UUID userId) {
-        return ResponseEntity.ok(userService.getUserByUserId(userId).orElseThrow());
+        return ResponseEntity.ok(userService.getUser(userId).orElseThrow());
     }
 
     @GetMapping("/phone/{phoneNumber}")

@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface ChatService {
 
-    Chat createChat(String chatName, boolean isGroup, List<UUID> participants);
+    Chat createChat(String chatName, boolean isGroup, List<UUID> participantIds);
 
-    Optional<Chat> getChatByChatId(UUID chatId);
+    Optional<Chat> getChat(UUID chatId);
 
     List<Chat> getAllChats();
 

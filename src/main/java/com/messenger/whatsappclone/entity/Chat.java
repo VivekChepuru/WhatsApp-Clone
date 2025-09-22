@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,12 +16,10 @@ import java.util.UUID;
 @Table(name = "chats")
 public class Chat {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;    // Internal DB PK
+    @Column(name = "id", nullable = false, updatable = false)
+    private UUID id = UUID.randomUUID();    // UUID PK
 
-    @Column(name = "chat_id", nullable = false, unique = true, updatable = false)
-    private String chatId; // Business ID
-
+    @Column(name = "chat_name")
     private String chatName;
 
     @Column(name = "is_group", nullable = false)
@@ -38,9 +35,9 @@ public class Chat {
 
     //Auto-assign UUID when a new chat is created
     @PrePersist
-    public void generateChatId(){
-        if (this.chatId == null){
-            this.chatId = UUID.randomUUID().toString();
+    public void prePersist(){
+        if (this.id == null){
+            this.id = UUID.randomUUID();
         }
     }
 }

@@ -5,15 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ChatRepository extends JpaRepository<Chat, Long> {
-    //Fetch chat by business UUID
-    Optional<Chat> findByChatId(String chatId);
+public interface ChatRepository extends JpaRepository<Chat, UUID> {
 
     // Fetch multiple chats by their UUIDs (useful for group chats)
-    List<Chat> findAllByChatIdIn(List<String> chatIds);
+    List<Chat> findAllByIdIn(List<UUID> chatIds);
 
     // Optional: search by name (case-insensitive)
     List<Chat> findByChatNameIgnoreCase(String chatName);

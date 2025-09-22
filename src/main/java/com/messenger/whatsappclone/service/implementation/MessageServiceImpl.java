@@ -32,10 +32,10 @@ public class MessageServiceImpl implements MessageService {
             throw new IllegalArgumentException("Message content cannot be empty");
         }
 
-        User sender = userRepository.findByUserId(senderId.toString())
+        User sender = userRepository.findById(senderId)
                 .orElseThrow(()-> new IllegalArgumentException("Sender not found"));
 
-        Chat chat = chatRepository.findByChatId(chatId.toString())
+        Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(()-> new IllegalArgumentException("Chat not found"));
 
         Message message = new Message();
@@ -47,9 +47,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Optional<Message> getMessageById(UUID messageId) {
-        return Optional.ofNullable(messageRepository.findByMessageId(messageId.toString())
-                .orElseThrow(() -> new IllegalArgumentException("Message not found")));
+    public Optional<Message> getMessage(UUID messageId) {
+        return messageRepository.findById(messageId);
     }
 
     @Override
@@ -65,8 +64,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void deleteMessage(UUID messageId) {
-        Message message = messageRepository.findByMessageId(messageId.toString())
-                .orElseThrow(()-> new IllegalArgumentException("Message not found"));
-        messageRepository.delete(message);
+        if (!messageRepository.existsById(messageId)) {
+            throw new IllegalArgumentException("Message not found.");
+        }
+        messageRepository.deleteById(messageId);
     }
 }

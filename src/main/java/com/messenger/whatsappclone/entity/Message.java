@@ -15,11 +15,8 @@ import java.util.UUID;
 @Table(name = "messages")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;    // Internal DB PK
-
-    @Column(name = "message_id", nullable = false, unique = true, updatable = false)
-    private String messageId; // Business UUID
+    @GeneratedValue
+    private UUID id;    // UUID as the PK
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
@@ -36,13 +33,9 @@ public class Message {
     private LocalDateTime timestamp;
 
     @PrePersist
-    public void generateMessageId() {
-        if (this.messageId == null) {
-            this.messageId = UUID.randomUUID().toString();
-        }
+    public void prePersist() {
         if (this.timestamp == null) {
             this.timestamp = LocalDateTime.now();
         }
     }
-
 }
