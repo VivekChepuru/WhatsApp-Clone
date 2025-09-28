@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.dto;
+package com.messenger.whatsappclone.dto.response;
 
 public enum UserStatus {
     ONLINE,

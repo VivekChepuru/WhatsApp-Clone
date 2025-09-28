@@ -25,6 +25,7 @@ public class Chat {
     @Column(name = "is_group", nullable = false)
     private boolean isGroup;
 
+    //Owing side of *to*
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "chat_participants",

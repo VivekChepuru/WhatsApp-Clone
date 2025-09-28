@@ -1,11 +1,8 @@
 package com.messenger.whatsappclone.service.implementation;
 
-import ch.qos.logback.core.joran.conditional.IfAction;
-import com.messenger.whatsappclone.dto.RegisterUserRequest;
-import com.messenger.whatsappclone.dto.UserStatus;
+import com.messenger.whatsappclone.dto.request.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.response.UserStatus;
 import com.messenger.whatsappclone.entity.User;
-import com.messenger.whatsappclone.repository.ChatRepository;
-import com.messenger.whatsappclone.repository.MessageRepository;
 import com.messenger.whatsappclone.repository.UserRepository;
 import com.messenger.whatsappclone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

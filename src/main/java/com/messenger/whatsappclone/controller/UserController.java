@@ -1,9 +1,12 @@
 package com.messenger.whatsappclone.controller;
 
-import com.messenger.whatsappclone.dto.RegisterUserRequest;
-import com.messenger.whatsappclone.dto.UserStatus;
+import com.messenger.whatsappclone.dto.request.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.response.UserResponse;
+import com.messenger.whatsappclone.dto.response.UserStatus;
+import com.messenger.whatsappclone.mapper.UserMapper;
 import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody RegisterUserRequest dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(dto));
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest req) {
+        User user = userService.registerUser(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(user));
     }
 
     @GetMapping("/{userId}")

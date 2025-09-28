@@ -1,7 +1,7 @@
 package com.messenger.whatsappclone.controller;
 
-import com.messenger.whatsappclone.dto.ChatCreateRequest;
-import com.messenger.whatsappclone.dto.ChatResponse;
+import com.messenger.whatsappclone.dto.request.ChatCreateRequest;
+import com.messenger.whatsappclone.dto.response.ChatResponse;
 import com.messenger.whatsappclone.entity.Chat;
 import com.messenger.whatsappclone.service.ChatService;
 import jakarta.validation.Valid;

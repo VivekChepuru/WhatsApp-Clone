@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.dto;
+package com.messenger.whatsappclone.dto.response;
 
 import lombok.Data;
 

@@ -1,11 +1,14 @@
 package com.messenger.whatsappclone.entity;
 
-import com.messenger.whatsappclone.dto.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.messenger.whatsappclone.dto.response.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -29,18 +32,29 @@ public class User {
     private String phoneNumber;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING) // store as "ONLINE" or "OFFLINE
     @Column(nullable = false)
     private UserStatus userStatus; // default OFFLINE when user registers
 
+    // Inverse side of ManyToMany (no @JoinTable here)
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    private Set<Chat> chats = new HashSet<>();
+
     @PrePersist
     public void prePersist() {
-        if (this.id == null) this.id = UUID.randomUUID();
+        if (this.id == null) {
+            this.id = UUID.randomUUID();
+        }
+
+        if (this.userId == null) {
+            this.userId = UUID.randomUUID().toString(); // generate external userId
+        }
 
         if (this.userStatus == null) {
-            this.userStatus = UserStatus.OFFLINE; // Default status
+            this.userStatus = UserStatus.OFFLINE; // default value
         }
     }
 }

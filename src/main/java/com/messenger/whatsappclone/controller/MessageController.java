@@ -1,7 +1,9 @@
 package com.messenger.whatsappclone.controller;
 
+import com.messenger.whatsappclone.dto.response.MessageResponse;
 import com.messenger.whatsappclone.entity.Chat;
 import com.messenger.whatsappclone.entity.Message;
+import com.messenger.whatsappclone.mapper.MessageMapper;
 import com.messenger.whatsappclone.service.ChatService;
 import com.messenger.whatsappclone.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ public class MessageController {
     private final ChatService chatService;
 
     @PostMapping
-    public ResponseEntity<Message> sendMessage(
+    public ResponseEntity<MessageResponse> sendMessage(
             @RequestParam String senderUserId,
             @RequestParam String chatId,
             @RequestParam String content) {
@@ -31,22 +33,27 @@ public class MessageController {
                 UUID.fromString(senderUserId),
                 UUID.fromString(chatId),
                 content);
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
-    }
-
-    @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<Message>> getMessagesByChatId(@PathVariable UUID chatId) {
-        Chat chat = chatService.getChat(chatId)
-                .orElseThrow(() -> new IllegalArgumentException("Chat not found with ID: " + chatId));
-
-        return ResponseEntity.ok(messageService.getMessagesByChat(chat));
+        return ResponseEntity.status(HttpStatus.CREATED).body(MessageMapper.toResponse(message));
     }
 
     @GetMapping("/{messageId}")
-    public ResponseEntity<Message> getMessageById(@PathVariable UUID messageId) {
+    public ResponseEntity<MessageResponse> getMessageById(@PathVariable UUID messageId) {
         return messageService.getMessage(messageId)
+                .map(MessageMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalArgumentException("Message not found with ID: " + messageId));
+    }
+
+    @GetMapping("/chat/{chatId}")
+    public ResponseEntity<List<MessageResponse>> getMessagesByChatId(@PathVariable UUID chatId) {
+        Chat chat = chatService.getChat(chatId)
+                .orElseThrow(() -> new IllegalArgumentException("Chat not found with ID: " + chatId));
+
+        return ResponseEntity.ok(
+                messageService.getMessagesByChat(chat).stream()
+                        .map(MessageMapper::toResponse)
+                        .toList()
+        );
     }
 
     @DeleteMapping("/{messageId}")

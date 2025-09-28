@@ -1,7 +1,7 @@
 package com.messenger.whatsappclone.service;
 
-import com.messenger.whatsappclone.dto.RegisterUserRequest;
-import com.messenger.whatsappclone.dto.UserStatus;
+import com.messenger.whatsappclone.dto.request.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.response.UserStatus;
 import com.messenger.whatsappclone.entity.User;
 
 import java.util.List;
