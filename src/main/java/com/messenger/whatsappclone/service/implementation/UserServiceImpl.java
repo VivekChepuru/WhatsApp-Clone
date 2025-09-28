@@ -5,7 +5,9 @@ import com.messenger.whatsappclone.dto.response.UserStatus;
 import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.repository.UserRepository;
 import com.messenger.whatsappclone.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +15,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; //Inject encoder
 
     @Override
     public User registerUser(RegisterUserRequest dto) {
@@ -37,8 +40,10 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(dto.getUsername().trim());
         user.setPhoneNumber(dto.getPhoneNumber());
-        user.setPassword(dto.getPassword()); // TODO: hash this before prod!
-        user.setUserStatus(UserStatus.OFFLINE); // enforce system-controlled value
+
+        // IMPORTANT: hash the password before saving
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        // other fields (id, userId, userStatus) handled by @PrePersist in entity
 
         return userRepository.save(user);
     }

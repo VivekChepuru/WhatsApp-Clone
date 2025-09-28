@@ -38,8 +38,10 @@ public class UserController {
     }
 
     @GetMapping("/phone/{phoneNumber}")
-    public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phoneNumber) {
-        return ResponseEntity.ok(userService.getUserByPhoneNumber(phoneNumber).orElseThrow());
+    public ResponseEntity<UserResponse> getUserByPhoneNumber(@PathVariable String phoneNumber) {
+        return userService.getUserByPhoneNumber(phoneNumber)
+                .map(user -> ResponseEntity.ok(UserMapper.toResponse(user)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{userId}/status")

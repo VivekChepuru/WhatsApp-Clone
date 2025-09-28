@@ -4,6 +4,7 @@ import com.messenger.whatsappclone.dto.response.ChatResponse;
 import com.messenger.whatsappclone.entity.Chat;
 import com.messenger.whatsappclone.entity.User;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ChatMapper {
@@ -22,7 +23,7 @@ public class ChatMapper {
 
     private static ChatResponse.ParticipantDto mapParticipant(User user) {
         ChatResponse.ParticipantDto p = new ChatResponse.ParticipantDto();
-        p.setId(user.getId());
+        p.setUserId(UUID.fromString(user.getUserId()));
         p.setUsername(user.getUsername());
         p.setPhoneNumber(user.getPhoneNumber());
         return p;

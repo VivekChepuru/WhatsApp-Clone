@@ -35,7 +35,7 @@ public class ChatController {
         r.setGroup(chat.isGroup());
         r.setParticipants(chat.getParticipants().stream().map(u -> {
             ChatResponse.ParticipantDto p = new ChatResponse.ParticipantDto();
-            p.setId(u.getId());
+            p.setUserId(UUID.fromString(u.getUserId()));
             p.setUsername(u.getUsername());
             p.setPhoneNumber(u.getPhoneNumber());
             return p;
@@ -66,13 +66,13 @@ public class ChatController {
     }
 
     @PostMapping("/{chatId}/add-user/{userId}")
-    public ResponseEntity<ChatResponse> addUserToChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
+    public ResponseEntity<ChatResponse> addUserToChat(@PathVariable UUID chatId, @PathVariable String userId) {
         Chat chat = chatService.addUserToChat(chatId, userId);
         return ResponseEntity.ok(toResponse(chat));
     }
 
     @PostMapping("/{chatId}/remove-user/{userId}")
-    public ResponseEntity<ChatResponse> removeUserFromChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
+    public ResponseEntity<ChatResponse> removeUserFromChat(@PathVariable UUID chatId, @PathVariable String userId) {
         Chat chat = chatService.removeUserFromChat(chatId, userId);
         return ResponseEntity.ok(toResponse(chat));
     }

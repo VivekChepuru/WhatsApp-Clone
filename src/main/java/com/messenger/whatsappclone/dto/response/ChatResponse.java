@@ -13,7 +13,7 @@ public class ChatResponse {
 
     @Data
     public static class ParticipantDto {
-        private UUID id;
+        private UUID userId;
         private String username;
         private String phoneNumber;
     }

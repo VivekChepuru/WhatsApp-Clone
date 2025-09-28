@@ -45,16 +45,10 @@ public class User {
 
     @PrePersist
     public void prePersist() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID();
-        }
-
-        if (this.userId == null) {
-            this.userId = UUID.randomUUID().toString(); // generate external userId
-        }
-
+        if (this.id == null) this.id = UUID.randomUUID();
+        if (this.userId == null) this.userId = UUID.randomUUID().toString(); // <-- add this
         if (this.userStatus == null) {
-            this.userStatus = UserStatus.OFFLINE; // default value
+            this.userStatus = UserStatus.OFFLINE;
         }
     }
 }
