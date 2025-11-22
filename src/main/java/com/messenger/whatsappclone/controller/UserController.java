@@ -32,9 +32,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(user));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID userId) {
-        return ResponseEntity.ok(userService.getUser(userId).orElseThrow());
+    @GetMapping("/id/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
+        return ResponseEntity.ok(userService.getUser(id).orElseThrow());
     }
 
     @GetMapping("/phone/{phoneNumber}")
@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserStatus(userId, userStatus));
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
