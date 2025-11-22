@@ -26,17 +26,20 @@ public class UserController {
         this.userService = userService;
     }
 
+    // REGISTER (public)
     @PostMapping("/register")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest req) {
         User user = userService.registerUser(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(user));
     }
 
+    // GET BY INTERNAL ID (UUID PK)
     @GetMapping("/id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUser(id).orElseThrow());
     }
 
+    // GET BY PHONE
     @GetMapping("/phone/{phoneNumber}")
     public ResponseEntity<UserResponse> getUserByPhoneNumber(@PathVariable String phoneNumber) {
         return userService.getUserByPhoneNumber(phoneNumber)
@@ -44,19 +47,22 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{userId}/status")
+    // UPDATE STATUS
+    @PutMapping("/id/{id}/status")
     public ResponseEntity<User> updateUserStatus(
-            @PathVariable UUID userId,
+            @PathVariable UUID id,
             @RequestParam UserStatus userStatus) {
-        return ResponseEntity.ok(userService.updateUserStatus(userId, userStatus));
+        return ResponseEntity.ok(userService.updateUserStatus(id, userStatus));
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
-        userService.deleteUser(userId);
+    // DELETE USER
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
+    // GET ALL
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
