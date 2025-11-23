@@ -19,7 +19,7 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
-
+    //TODO: Need to test
     @PostMapping
     public ResponseEntity<ChatResponse> createChat(@Valid @RequestBody ChatCreateRequest req) {
         Chat chat = chatService.createChat(req.getChatName(), req.getIsGroup(), req.getParticipantIds());
