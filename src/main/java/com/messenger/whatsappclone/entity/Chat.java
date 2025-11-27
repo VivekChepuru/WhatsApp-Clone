@@ -30,7 +30,7 @@ public class Chat {
     @JoinTable(
             name = "chat_participants",
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
     )
     private Set<User> participants = new HashSet<>();
 

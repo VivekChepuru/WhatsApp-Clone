@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    Optional<User> findByUserId(String userId);
+    Optional<User> findByUserId(UUID userId);
 
     // Lookup by phone number (for login / contact discovery)
     Optional<User> findByPhoneNumber(String phoneNumber);
@@ -22,5 +22,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByUsername(String username);
 
     // 🔹 NEW: bulk fetch users by external userId
-    List<User> findByUserIdIn(List<String> userIds);
+    List<User> findByUserIdIn(List<UUID> userIds);
 }

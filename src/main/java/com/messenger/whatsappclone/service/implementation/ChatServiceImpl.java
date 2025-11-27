@@ -24,44 +24,35 @@ public class ChatServiceImpl implements ChatService {
         if (isGroup && (chatName == null || chatName.trim().isEmpty())) {
             throw new IllegalArgumentException("Group chat must have a name.");
         }
+
         if (participantUserIds == null || participantUserIds.isEmpty()) {
-            throw new IllegalArgumentException("Chat must have at least one participant. ");
+            throw new IllegalArgumentException("Chat must have at least one participant.");
         }
 
-        // Convert UUIDs to Strings since userId is stored as String
-        List<String> userIdStrings = participantUserIds.stream()
-                .map(UUID::toString)
-                .toList();
+        // No conversion needed — userId is now UUID
 
-        // remove duplicates while preserving intention
-        //Set<UUID> uniqueIds = new LinkedHashSet<>(participantUserIds);
-        //Fetch users in bulk
-        //List<User> users = userRepository.findAllById(uniqueIds);
+        // Fetch users by UUIDs
+        List<User> users = userRepository.findByUserIdIn(participantUserIds);
 
-        //Fetch users by external userID
-        List<User> users = userRepository.findByUserIdIn(userIdStrings);
-
-        // Verify all were found
-        Set<String> foundUserIds = users.stream()
+        // Verify all users were found
+        Set<UUID> foundUserIds = users.stream()
                 .map(User::getUserId)
                 .collect(Collectors.toSet());
 
-        Set<String> missing = userIdStrings.stream()
+        Set<UUID> missing = participantUserIds.stream()
                 .filter(id -> !foundUserIds.contains(id))
                 .collect(Collectors.toSet());
 
         if (!missing.isEmpty()) {
-            throw new IllegalArgumentException("The following participants IDs were not found: " + missing);
+            throw new IllegalArgumentException("The following participant IDs were not found: " + missing);
         }
 
         // Build chat
         Chat chat = new Chat();
         chat.setChatName(chatName);
         chat.setGroup(isGroup);
-        // use a Set<User>
         chat.setParticipants(new HashSet<>(users));
 
-        // save (transactional)
         return chatRepository.save(chat);
     }
 
@@ -88,7 +79,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat addUserToChat(UUID chatId, String userId) {
+    public Chat addUserToChat(UUID chatId, UUID userId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(()-> new IllegalArgumentException("Chat not found."));
         User user = userRepository.findByUserId(userId)
@@ -102,7 +93,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat removeUserFromChat(UUID chatId, String userId) {
+    public Chat removeUserFromChat(UUID chatId, UUID userId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(()-> new IllegalArgumentException("Chat not found."));
         User user = userRepository.findByUserId(userId)

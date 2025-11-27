@@ -23,7 +23,7 @@ public class User {
     private UUID id = UUID.randomUUID();
 
     @Column(name = "user_id", nullable = false, unique = true, updatable = false)
-    private String userId;  // External UUID for APIs
+    private UUID userId;  // External UUID for APIs
 
     @Column(nullable = false)
     private String username;
@@ -46,7 +46,7 @@ public class User {
     @PrePersist
     public void prePersist() {
         if (this.id == null) this.id = UUID.randomUUID();
-        if (this.userId == null) this.userId = UUID.randomUUID().toString(); // <-- add this
+        if (this.userId == null) this.userId = UUID.fromString(UUID.randomUUID().toString()); // <-- add this
         if (this.userStatus == null) {
             this.userStatus = UserStatus.OFFLINE;
         }

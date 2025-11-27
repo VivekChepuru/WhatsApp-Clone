@@ -19,7 +19,7 @@ public interface ChatService {
 
     void deleteChat(UUID chatId);
 
-    Chat addUserToChat(UUID chatId, String userId);
+    Chat addUserToChat(UUID chatId, UUID userId);
 
-    Chat removeUserFromChat(UUID chatId, String userId);
+    Chat removeUserFromChat(UUID chatId, UUID userId);
 }

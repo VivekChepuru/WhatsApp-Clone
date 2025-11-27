@@ -23,7 +23,7 @@ public class ChatMapper {
 
     private static ChatResponse.ParticipantDto mapParticipant(User user) {
         ChatResponse.ParticipantDto p = new ChatResponse.ParticipantDto();
-        p.setUserId(UUID.fromString(user.getUserId()));
+        p.setUserId(user.getUserId());
         p.setUsername(user.getUsername());
         p.setPhoneNumber(user.getPhoneNumber());
         return p;

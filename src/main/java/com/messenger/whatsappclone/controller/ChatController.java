@@ -35,13 +35,22 @@ public class ChatController {
         r.setGroup(chat.isGroup());
         r.setParticipants(chat.getParticipants().stream().map(u -> {
             ChatResponse.ParticipantDto p = new ChatResponse.ParticipantDto();
-            p.setUserId(UUID.fromString(u.getUserId()));
+            p.setUserId(u.getUserId());
             p.setUsername(u.getUsername());
             p.setPhoneNumber(u.getPhoneNumber());
             return p;
         }).collect(Collectors.toList()));
         return r;
     }
+    //Helper method -safe UUID parser
+    public static UUID safeToUUID(String id) {
+        try {
+            return UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            return null; // or throw a custom exception
+        }
+    }
+
 
     @GetMapping("/{chatId}")
     public ResponseEntity<ChatResponse> getChatById(@PathVariable UUID chatId) {
@@ -66,13 +75,13 @@ public class ChatController {
     }
 
     @PostMapping("/{chatId}/add-user/{userId}")
-    public ResponseEntity<ChatResponse> addUserToChat(@PathVariable UUID chatId, @PathVariable String userId) {
+    public ResponseEntity<ChatResponse> addUserToChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
         Chat chat = chatService.addUserToChat(chatId, userId);
         return ResponseEntity.ok(toResponse(chat));
     }
 
     @PostMapping("/{chatId}/remove-user/{userId}")
-    public ResponseEntity<ChatResponse> removeUserFromChat(@PathVariable UUID chatId, @PathVariable String userId) {
+    public ResponseEntity<ChatResponse> removeUserFromChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
         Chat chat = chatService.removeUserFromChat(chatId, userId);
         return ResponseEntity.ok(toResponse(chat));
     }
