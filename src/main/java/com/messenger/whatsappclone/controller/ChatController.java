@@ -19,7 +19,7 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
-    //TODO: Need to test
+    //CREATE ONE-ON-ONE/GROUP CHAT
     @PostMapping
     public ResponseEntity<ChatResponse> createChat(@Valid @RequestBody ChatCreateRequest req) {
         Chat chat = chatService.createChat(req.getChatName(), req.getIsGroup(), req.getParticipantIds());
@@ -50,15 +50,15 @@ public class ChatController {
             return null; // or throw a custom exception
         }
     }
-
-
+    //GET CHAT BY CHAT_ID
+    //TODO: Need to test
     @GetMapping("/{chatId}")
     public ResponseEntity<ChatResponse> getChatById(@PathVariable UUID chatId) {
         Chat chat = chatService.getChat(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found with ID: " + chatId));
         return ResponseEntity.ok(toResponse(chat));
     }
-
+    //GET ALL CHATS
     @GetMapping
     public ResponseEntity<List<ChatResponse>> getAllChats() {
         List<ChatResponse> chats = chatService.getAllChats()
@@ -68,21 +68,24 @@ public class ChatController {
         return ResponseEntity.ok(chats);
     }
 
-    @DeleteMapping("/{chatId}")
-    public ResponseEntity<Void> deleteChat(@PathVariable UUID chatId) {
-        chatService.deleteChat(chatId);
-        return ResponseEntity.noContent().build();
-    }
-
+    //ADD USER TO CHAT
     @PostMapping("/{chatId}/add-user/{userId}")
     public ResponseEntity<ChatResponse> addUserToChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
         Chat chat = chatService.addUserToChat(chatId, userId);
         return ResponseEntity.ok(toResponse(chat));
     }
 
+    //REMOVE USER FROM CHAT
     @PostMapping("/{chatId}/remove-user/{userId}")
     public ResponseEntity<ChatResponse> removeUserFromChat(@PathVariable UUID chatId, @PathVariable UUID userId) {
         Chat chat = chatService.removeUserFromChat(chatId, userId);
         return ResponseEntity.ok(toResponse(chat));
+    }
+
+    //DELETE CHATS BY CHAT_ID
+    @DeleteMapping("/{chatId}")
+    public ResponseEntity<Void> deleteChat(@PathVariable UUID chatId) {
+        chatService.deleteChat(chatId);
+        return ResponseEntity.noContent().build();
     }
 }
