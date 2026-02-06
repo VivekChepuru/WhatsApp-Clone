@@ -1,18 +1,19 @@
 package com.messenger.whatsappclone.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "participants")  // Exclude to prevent circular toString
+@EqualsAndHashCode(exclude = "participants")  // ✅ CRITICAL: Exclude participants from equals/hashCode
 @Table(name = "chats")
 public class Chat {
     @Id
