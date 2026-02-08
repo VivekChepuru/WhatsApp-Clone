@@ -71,43 +71,6 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-//    @Override
-//    public Chat createChat(String chatName, boolean isGroup, List<UUID> participantUserIds) {
-//        if (isGroup && (chatName == null || chatName.trim().isEmpty())) {
-//            throw new IllegalArgumentException("Group chat must have a name.");
-//        }
-//
-//        if (participantUserIds == null || participantUserIds.isEmpty()) {
-//            throw new IllegalArgumentException("Chat must have at least one participant.");
-//        }
-//
-//        // No conversion needed — userId is now UUID
-//
-//        // Fetch users by UUIDs
-//        List<User> users = userRepository.findAllById(participantUserIds);
-//
-//        // Verify all users were found
-//        Set<UUID> foundIds = users.stream()
-//                .map(User::getId)
-//                .collect(Collectors.toSet());
-//
-//        Set<UUID> missing = participantUserIds.stream()
-//                .filter(id -> !foundIds.contains(id))
-//                .collect(Collectors.toSet());
-//
-//        if (!missing.isEmpty()) {
-//            throw new IllegalArgumentException("The following participant IDs were not found: " + missing);
-//        }
-//
-//        // Build chat
-//        Chat chat = new Chat();
-//        chat.setChatName(chatName);
-//        chat.setGroup(isGroup);
-//        chat.setParticipants(new HashSet<>(users));
-//
-//        return chatRepository.save(chat);
-//    }
-
     @Override
     public Optional<Chat> getChat(UUID chatId) {
         return chatRepository.findById(chatId);
@@ -133,14 +96,17 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat addUserToChat(UUID chatId, UUID userId) {
         Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(()-> new IllegalArgumentException("Chat not found."));
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(()-> new IllegalArgumentException("User not found."));
+                .orElseThrow(() -> new IllegalArgumentException("Chat not found."));
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+        // ✅ add() returns false if user was ALREADY in the set
+        // ✅ add() returns true if user was SUCCESSFULLY added
         if (!chat.getParticipants().add(user)) {
             throw new IllegalArgumentException("User already in chat.");
         }
-        chat.getParticipants().add(user);
+
         return chatRepository.save(chat);
     }
 
@@ -148,13 +114,14 @@ public class ChatServiceImpl implements ChatService {
     public Chat removeUserFromChat(UUID chatId, UUID userId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(()-> new IllegalArgumentException("Chat not found."));
+
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(()-> new IllegalArgumentException("User not found."));
 
         if (!chat.getParticipants().remove(user)) {
-            throw new IllegalArgumentException("User is not part of this chart.");
+            throw new IllegalArgumentException("User is not part of this chat.");
         }
-        chat.getParticipants().remove(user);
+
         return chatRepository.save(chat);
     }
 }
