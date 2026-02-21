@@ -1,6 +1,6 @@
 package com.messenger.whatsappclone.controller;
 
-import com.messenger.whatsappclone.dto.request.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.request.UserRegisterRequest;
 import com.messenger.whatsappclone.dto.response.UserResponse;
 import com.messenger.whatsappclone.dto.response.UserStatus;
 import com.messenger.whatsappclone.mapper.UserMapper;
@@ -28,7 +28,7 @@ public class UserController {
 
     // REGISTER (public)
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest req) {
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRegisterRequest req) {
         User user = userService.registerUser(req);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(user));
     }

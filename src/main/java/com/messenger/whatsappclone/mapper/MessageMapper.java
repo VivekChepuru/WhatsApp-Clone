@@ -5,15 +5,17 @@ import com.messenger.whatsappclone.entity.Message;
 
 public class MessageMapper {
     public static MessageResponse toResponse(Message message) {
-        MessageResponse dto = new MessageResponse();
-        dto.setMessageId(message.getId());
-        dto.setContent(message.getContent());
-        dto.setTimestamp(message.getTimestamp());
+        MessageResponse response = new MessageResponse();
+        response.setId(message.getId());
+        response.setChatId(message.getChat().getId());
+        response.setContent(message.getContent());
+        response.setTimestamp(message.getTimestamp());
 
-        dto.setSenderId(message.getSender().getId());
-        dto.setSenderUsername(message.getSender().getUsername());
-        dto.setChatId(message.getChat().getId());
+        // Sender info
+        response.setSenderId(message.getSender().getId());
+        response.setSenderUsername(message.getSender().getUsername());
+        response.setSenderPhoneNumber(message.getSender().getPhoneNumber());
 
-        return dto;
+        return response;
     }
 }

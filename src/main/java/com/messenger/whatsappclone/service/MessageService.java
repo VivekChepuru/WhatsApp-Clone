@@ -9,13 +9,15 @@ import java.util.UUID;
 
 public interface MessageService {
 
-    Message sendMessage(UUID senderId, UUID chatId, String content);
+    // Updated: removed senderUserId parameter
+    Message sendMessage(UUID authenticatedUserId, UUID chatId, String content);
 
     Optional<Message> getMessage(UUID messageId);
 
-    List<Message> getMessagesByChat(Chat chat);
+    List<Message> getMessagesByChat(UUID chatId);
 
-    List<Message> getLatestMessages(Chat chat, int limit);
+    void deleteMessage(UUID messageId, UUID authenticatedUserId);  // Only sender can delete
 
-    void deleteMessage(UUID messageId);
+    // Optional: for future features
+    Message editMessage(UUID messageId, UUID authenticatedUserId, String newContent);
 }

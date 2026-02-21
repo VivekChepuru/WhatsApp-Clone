@@ -10,6 +10,7 @@ import com.messenger.whatsappclone.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,21 +28,23 @@ public class MessageServiceImpl implements MessageService {
     private ChatRepository chatRepository;
 
     @Override
-    public Message sendMessage(UUID senderId, UUID chatId, String content) {
-        if (content == null || content.trim().isEmpty()){
-            throw new IllegalArgumentException("Message content cannot be empty");
-        }
-
-        User sender = userRepository.findById(senderId)
+    public Message sendMessage(UUID authenticatedUserId, UUID chatId, String content) {
+        //Validate user exists
+        User sender = userRepository.findById(authenticatedUserId)
                 .orElseThrow(()-> new IllegalArgumentException("Sender not found"));
-
+        //Validate chat exists
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(()-> new IllegalArgumentException("Chat not found"));
 
+        //Verify sender is a participant of the chat
+        if (!chat.getParticipants().contains(sender)) {
+            throw new IllegalArgumentException("You are not a participant of this chat");
+        }
         Message message = new Message();
-        message.setContent(content);
-        message.setSender(sender);
         message.setChat(chat);
+        message.setSender(sender);
+        message.setContent(content);
+        message.setTimestamp(LocalDateTime.now());
 
         return messageRepository.save(message);
     }
@@ -52,21 +55,37 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getMessagesByChat(Chat chat) {
-        return messageRepository.findByChatOrderByTimestampAsc(chat);
+    public List<Message> getMessagesByChat(UUID chatId) {
+        return messageRepository.findByChat_IdOrderByTimestampAsc(chatId);
     }
 
     @Override
-    public List<Message> getLatestMessages(Chat chat, int limit) {
-        List<Message> recent = messageRepository.findTop50ByChatOrderByTimestampDesc(chat);
-        return recent.stream().limit(limit).toList();
-    }
+    public void deleteMessage(UUID messageId, UUID authenticatedUserId) {
+        Message message = messageRepository.findById(messageId)
+                        .orElseThrow(()-> new IllegalArgumentException("Message not found"));
 
-    @Override
-    public void deleteMessage(UUID messageId) {
-        if (!messageRepository.existsById(messageId)) {
-            throw new IllegalArgumentException("Message not found.");
+        //Only sender can delete their own message
+        if(!message.getSender().getId().equals(authenticatedUserId)){
+            throw new IllegalArgumentException("You can only delete your own messages");
         }
-        messageRepository.deleteById(messageId);
+
+        messageRepository.delete(message);
+    }
+
+    @Override
+    public Message editMessage(UUID messageId, UUID authenticatedUserId, String newContent) {
+        Message message = messageRepository.findById(messageId)
+                    .orElseThrow(()-> new IllegalArgumentException("Message not found"));
+
+        //Only the sender can edit their own message
+        if(!message.getSender().getId().equals(authenticatedUserId)){
+            throw new IllegalArgumentException("You can only edit your own messages");
+        }
+
+        message.setContent(newContent);
+        message.setTimestamp(LocalDateTime.now());
+        //isEdited flag needs to be added
+
+        return messageRepository.save(message);
     }
 }

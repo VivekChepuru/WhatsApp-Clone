@@ -1,12 +1,11 @@
 package com.messenger.whatsappclone.service.implementation;
 
-import com.messenger.whatsappclone.dto.request.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.request.UserRegisterRequest;
 import com.messenger.whatsappclone.dto.response.UserStatus;
 import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.repository.UserRepository;
 import com.messenger.whatsappclone.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder; //Inject encoder
 
     @Override
-    public User registerUser(RegisterUserRequest dto) {
+    public User registerUser(UserRegisterRequest dto) {
         if (dto.getPhoneNumber() == null || !dto.getPhoneNumber().matches("\\d{10}")) {
             throw new IllegalArgumentException("Invalid phone number. Must be 10 digits.");
         }

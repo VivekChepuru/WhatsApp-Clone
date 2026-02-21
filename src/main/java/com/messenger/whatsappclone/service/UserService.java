@@ -1,6 +1,6 @@
 package com.messenger.whatsappclone.service;
 
-import com.messenger.whatsappclone.dto.request.RegisterUserRequest;
+import com.messenger.whatsappclone.dto.request.UserRegisterRequest;
 import com.messenger.whatsappclone.dto.response.UserStatus;
 import com.messenger.whatsappclone.entity.User;
 
@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
-    User registerUser(RegisterUserRequest dto);
+    User registerUser(UserRegisterRequest dto);
 
     Optional<User> getUser(UUID userId);
 
