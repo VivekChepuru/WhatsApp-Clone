@@ -2,16 +2,15 @@ package com.messenger.whatsappclone.controller;
 
 import com.messenger.whatsappclone.dto.request.MessageCreateRequest;
 import com.messenger.whatsappclone.dto.response.MessageResponse;
-import com.messenger.whatsappclone.entity.Chat;
+import com.messenger.whatsappclone.dto.websocket.WebSocketMessageDTO;
 import com.messenger.whatsappclone.entity.Message;
 import com.messenger.whatsappclone.entity.User;
 import com.messenger.whatsappclone.mapper.MessageMapper;
 import com.messenger.whatsappclone.repository.UserRepository;
-import com.messenger.whatsappclone.service.ChatService;
 import com.messenger.whatsappclone.service.MessageService;
-import com.messenger.whatsappclone.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/messages")
@@ -33,21 +31,43 @@ public class MessageController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    // Send a message
     @PostMapping
     public ResponseEntity<MessageResponse> sendMessage(
             @Valid @RequestBody MessageCreateRequest request,
             Authentication authentication) {
 
-        //Get authenticated user
+        // Get authenticated user
         String phoneNumber = authentication.getName();
         User sender = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Authenticated user not found"));
 
-
+        // Send message
         Message message = messageService.sendMessage(
                 sender.getId(),
                 request.getChatId(),
                 request.getContent()
+        );
+
+        MessageResponse response = MessageMapper.toResponse(message);
+
+        // BROADCAST MESSAGE VIA WEBSOCKET
+        WebSocketMessageDTO wsMessage  = new WebSocketMessageDTO(
+                message.getId(),
+                message.getChat().getId(),
+                sender.getId(),
+                sender.getUsername(),
+                message.getContent(),
+                message.getTimestamp(),
+                WebSocketMessageDTO.MessageStatus.SENT
+        );
+
+        messagingTemplate.convertAndSend(
+                "/topic/chat" + request.getChatId(),
+                wsMessage
         );
 
         return ResponseEntity
@@ -55,7 +75,7 @@ public class MessageController {
                 .body(MessageMapper.toResponse(message));
     }
 
-    //Get all messages in a chat
+    // Get all messages in a chat
     @GetMapping("/chat/{chatId}")
     public ResponseEntity<List<MessageResponse>> getMessagesByChat(@PathVariable UUID chatId) {
         List<MessageResponse> message = messageService.getMessagesByChat(chatId)
@@ -66,7 +86,7 @@ public class MessageController {
         return ResponseEntity.ok(message);
     }
 
-   //Get a single message by ID
+   // Get a single message by ID
     @GetMapping("/{messageId}")
     public ResponseEntity<MessageResponse> getMessage(@PathVariable UUID messageId) {
         Message message = messageService.getMessage(messageId)
@@ -75,7 +95,7 @@ public class MessageController {
         return ResponseEntity.ok(MessageMapper.toResponse(message));
     }
 
-    //Delete a message (only sender can delete)
+    // Delete a message (only sender can delete)
     @DeleteMapping("/{messageId}")
     public ResponseEntity<Void> deleteMessage(
             @PathVariable UUID messageId,

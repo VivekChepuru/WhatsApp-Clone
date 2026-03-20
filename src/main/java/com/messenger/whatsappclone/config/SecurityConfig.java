@@ -11,21 +11,33 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable for API (consider enabling + CSRF token for browser clients)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll() // Public endpoints
-                        .anyRequest().authenticated() // Everything else requires auth
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.disable())  // Allow frames for SockJS
                 )
-                // ✅ Replace deprecated .httpBasic() with:
-                .httpBasic(Customizer.withDefaults()); // Explicitly enable HTTP Basic
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/ws/**",
+                                "/app/**",
+                                "/topic/**",
+                                "/queue/**",
+                                "/websocket-test.html",
+                                "/websocket-simple-test.html",
+                                "/api/users/register",
+                                "/error",
+                                "/test"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(basic -> {});
 
         return http.build();
     }
 
-    // BCrypt encoder for production-safe password hashing
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
