@@ -13,5 +13,5 @@ public class TypingIndicatorDTO {
     private UUID chatId;
     private UUID userId;
     private String username;
-    private boolean isTyping;
+    private boolean typing;
 }

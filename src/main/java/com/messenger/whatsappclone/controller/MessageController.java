@@ -66,8 +66,7 @@ public class MessageController {
         );
 
         messagingTemplate.convertAndSend(
-                "/topic/chat" + request.getChatId(),
-                wsMessage
+                "/topic/chat", wsMessage
         );
 
         return ResponseEntity

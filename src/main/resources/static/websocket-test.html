@@ -102,15 +102,21 @@
         const socket = new SockJS('http://localhost:8080/ws');
         stompClient = Stomp.over(socket);
 
+        // Enable debug
+        stompClient.debug = function(str) {
+            console.log('STOMP: ' + str);
+        };
+
         stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
+            console.log('✅ Connected: ' + frame);
             updateConnectionStatus(true);
 
+            // Subscribe to general status updates
             stompClient.subscribe('/topic/status', function(message) {
                 console.log('User status update:', JSON.parse(message.body));
             });
         }, function(error) {
-            console.error('Connection error:', error);
+            console.error('❌ Connection error:', error);
             updateConnectionStatus(false);
         });
     }
@@ -138,17 +144,26 @@
 
         currentChatId = chatId;
 
+        // ✅ FIX 1: Subscribe to MESSAGES topic
+        console.log('📨 Subscribing to messages: /topic/chat/' + chatId);
         stompClient.subscribe('/topic/chat/' + chatId, function(message) {
+            console.log('📨 Message received on topic:', message);
             showMessage(JSON.parse(message.body));
         });
 
+        // ✅ FIX 2: Subscribe to TYPING topic
+        console.log('✍️ Subscribing to typing: /topic/chat/' + chatId + '/typing');
         stompClient.subscribe('/topic/chat/' + chatId + '/typing', function(message) {
+            console.log('✍️ Typing indicator received:', message);
             showTyping(JSON.parse(message.body));
         });
 
         document.getElementById('subscriptionInfo').innerHTML =
-            '<p style="color: green;">✅ Subscribed to chat: ' + chatId + '</p>';
-        console.log('Subscribed to chat:', chatId);
+            '<p style="color: green;">✅ Subscribed to chat: ' + chatId + '</p>' +
+            '<p style="color: green;">✅ Subscribed to /topic/chat/' + chatId + '</p>' +
+            '<p style="color: green;">✅ Subscribed to /topic/chat/' + chatId + '/typing</p>';
+
+        console.log('✅ Successfully subscribed to chat:', chatId);
     }
 
     function sendTyping(isTyping) {
@@ -165,21 +180,22 @@
             return;
         }
 
-        // ✅ FIXED: Use a valid dummy UUID
         const userId = '00000000-0000-0000-0000-000000000000';
 
+        // ✅ FIX 3: Use "typing" instead of "isTyping"
         const typingIndicator = {
             chatId: chatId,
             userId: userId,
             username: username,
-            isTyping: isTyping
+            typing: isTyping  // ✅ CHANGED from isTyping
         };
 
+        console.log('Sending typing indicator:', typingIndicator);
         stompClient.send("/app/typing", {}, JSON.stringify(typingIndicator));
-        console.log('Sent typing indicator:', typingIndicator);
     }
 
     function showMessage(message) {
+        console.log('📨 Displaying message:', message);
         const messagesDiv = document.getElementById('messages');
         const messageElement = document.createElement('div');
         messageElement.className = 'message';
@@ -192,21 +208,18 @@
 
         messagesDiv.appendChild(messageElement);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-        console.log('Received message:', message);
     }
 
     function showTyping(typing) {
+        console.log('✍️ Displaying typing indicator:', typing);
         const typingDiv = document.getElementById('typingIndicators');
 
-        if (typing.isTyping) {
+        if (typing.typing) {  // ✅ CHANGED from typing.isTyping
             typingDiv.innerHTML = '✍️ <strong>' + typing.username + '</strong> is typing...';
             typingDiv.style.color = '#007bff';
         } else {
             typingDiv.innerHTML = '';
         }
-
-        console.log('Typing indicator:', typing);
     }
 
     function updateConnectionStatus(connected) {
@@ -220,10 +233,12 @@
         }
     }
 
+    // Auto-connect on page load
     window.onload = function() {
         setTimeout(connect, 500);
     };
 
+    // Disconnect on page unload
     window.onbeforeunload = function() {
         disconnect();
     };

@@ -25,10 +25,22 @@ public class WebSocketController {
     @MessageMapping("/typing")
     public void handleTypingIndicator(@Payload TypingIndicatorDTO typingIndicator) {
         // Broadcast typing status to all users in the chat
-        messagingTemplate.convertAndSend(
-                "/topic/chat/" + typingIndicator.getChatId() + "/typing",
-                typingIndicator
-        );
+//        messagingTemplate.convertAndSend(
+//                "/topic/chat/" + typingIndicator.getChatId() + "/typing",
+//                typingIndicator
+//        );
+
+        System.out.println("=== TYPING INDICATOR RECEIVED ===");
+        System.out.println("Chat ID: " + typingIndicator.getChatId());
+        System.out.println("Username: " + typingIndicator.getUsername());
+        System.out.println("Is Typing: " + typingIndicator.isTyping());
+
+        String topic = "/topic/chat/" + typingIndicator.getChatId() + "/typing";
+        System.out.println("Broadcasting to: " + topic);
+
+        messagingTemplate.convertAndSend(topic, typingIndicator);
+
+        System.out.println("=== TYPING INDICATOR SENT ===");
     }
 
     /**
