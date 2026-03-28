@@ -40,6 +40,10 @@ public class MessageController {
             @Valid @RequestBody MessageCreateRequest request,
             Authentication authentication) {
 
+        System.out.println("=== SENDING MESSAGE ===");
+        System.out.println("Chat ID: " + request.getChatId());
+        System.out.println("Content: " + request.getContent());
+
         // Get authenticated user
         String phoneNumber = authentication.getName();
         User sender = userRepository.findByPhoneNumber(phoneNumber)
@@ -65,13 +69,20 @@ public class MessageController {
                 WebSocketMessageDTO.MessageStatus.SENT
         );
 
+        System.out.println("=== BROADCASTING MESSAGE ===");
+        System.out.println("Topic: /topic/chat/" + request.getChatId());
+        System.out.println("Message: " + wsMessage);
+
         messagingTemplate.convertAndSend(
-                "/topic/chat", wsMessage
+                "/topic/chat/" + request.getChatId(),
+                wsMessage
         );
+
+        System.out.println("=== BROADCAST COMPLETE ===");
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(MessageMapper.toResponse(message));
+                .body(response);
     }
 
     // Get all messages in a chat

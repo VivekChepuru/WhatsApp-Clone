@@ -12,16 +12,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+        // Enable simple broker WITHOUT heartbeat
         config.enableSimpleBroker("/topic", "/queue");
         config.setApplicationDestinationPrefixes("/app");
         config.setUserDestinationPrefix("/user");
+
+        System.out.println("=== MESSAGE BROKER CONFIGURED ===");
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
-        // WebSocket endpoint that clients will connect to
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:63342", "http://localhost:8080")     // ATTENTION For development - restrict in production
-                .withSockJS();              // Fallback for browser that don't support WebSocket
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+
+        System.out.println("=== STOMP ENDPOINT /ws REGISTERED ===");
     }
 }
