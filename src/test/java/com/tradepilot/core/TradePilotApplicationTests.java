@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone;
+package com.tradepilot.core;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
