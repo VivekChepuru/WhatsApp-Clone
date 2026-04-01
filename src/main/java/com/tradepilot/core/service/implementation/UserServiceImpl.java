@@ -1,10 +1,10 @@
-package com.messenger.whatsappclone.service.implementation;
+package com.tradepilot.core.service.implementation;
 
-import com.messenger.whatsappclone.dto.request.UserRegisterRequest;
-import com.messenger.whatsappclone.dto.response.UserStatus;
-import com.messenger.whatsappclone.entity.User;
-import com.messenger.whatsappclone.repository.UserRepository;
-import com.messenger.whatsappclone.service.UserService;
+import com.tradepilot.core.dto.request.UserRegisterRequest;
+import com.tradepilot.core.dto.response.UserStatus;
+import com.tradepilot.core.entity.User;
+import com.tradepilot.core.repository.UserRepository;
+import com.tradepilot.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

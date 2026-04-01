@@ -1,7 +1,6 @@
-package com.messenger.whatsappclone.service;
+package com.tradepilot.core.service;
 
-import com.messenger.whatsappclone.entity.Chat;
-import com.messenger.whatsappclone.entity.User;
+import com.tradepilot.core.entity.Chat;
 
 import java.util.List;
 import java.util.Optional;

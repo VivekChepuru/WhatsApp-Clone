@@ -1,10 +1,10 @@
-package com.messenger.whatsappclone.service.implementation;
+package com.tradepilot.core.service.implementation;
 
-import com.messenger.whatsappclone.entity.Chat;
-import com.messenger.whatsappclone.entity.User;
-import com.messenger.whatsappclone.repository.ChatRepository;
-import com.messenger.whatsappclone.repository.UserRepository;
-import com.messenger.whatsappclone.service.ChatService;
+import com.tradepilot.core.entity.Chat;
+import com.tradepilot.core.entity.User;
+import com.tradepilot.core.repository.ChatRepository;
+import com.tradepilot.core.repository.UserRepository;
+import com.tradepilot.core.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

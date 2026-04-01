@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.dto.websocket;
+package com.tradepilot.core.dto.websocket;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

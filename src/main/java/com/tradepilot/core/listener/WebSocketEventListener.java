@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.listener;
+package com.tradepilot.core.listener;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

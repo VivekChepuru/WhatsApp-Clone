@@ -1,7 +1,7 @@
-package com.messenger.whatsappclone.controller;
+package com.tradepilot.core.controller;
 
-import com.messenger.whatsappclone.dto.websocket.TypingIndicatorDTO;
-import com.messenger.whatsappclone.dto.websocket.UserStatusDTO;
+import com.tradepilot.core.dto.websocket.TypingIndicatorDTO;
+import com.tradepilot.core.dto.websocket.UserStatusDTO;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

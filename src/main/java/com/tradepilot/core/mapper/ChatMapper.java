@@ -1,10 +1,9 @@
-package com.messenger.whatsappclone.mapper;
+package com.tradepilot.core.mapper;
 
-import com.messenger.whatsappclone.dto.response.ChatResponse;
-import com.messenger.whatsappclone.entity.Chat;
-import com.messenger.whatsappclone.entity.User;
+import com.tradepilot.core.dto.response.ChatResponse;
+import com.tradepilot.core.entity.Chat;
+import com.tradepilot.core.entity.User;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ChatMapper {

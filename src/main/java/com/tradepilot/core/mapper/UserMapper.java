@@ -1,7 +1,7 @@
-package com.messenger.whatsappclone.mapper;
+package com.tradepilot.core.mapper;
 
-import com.messenger.whatsappclone.dto.response.UserResponse;
-import com.messenger.whatsappclone.entity.User;
+import com.tradepilot.core.dto.response.UserResponse;
+import com.tradepilot.core.entity.User;
 
 public class UserMapper {
 

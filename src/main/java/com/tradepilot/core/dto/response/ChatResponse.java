@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.dto.response;
+package com.tradepilot.core.dto.response;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.entity;
+package com.tradepilot.core.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

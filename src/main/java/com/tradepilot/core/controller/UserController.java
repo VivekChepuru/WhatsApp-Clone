@@ -1,11 +1,11 @@
-package com.messenger.whatsappclone.controller;
+package com.tradepilot.core.controller;
 
-import com.messenger.whatsappclone.dto.request.UserRegisterRequest;
-import com.messenger.whatsappclone.dto.response.UserResponse;
-import com.messenger.whatsappclone.dto.response.UserStatus;
-import com.messenger.whatsappclone.mapper.UserMapper;
-import com.messenger.whatsappclone.entity.User;
-import com.messenger.whatsappclone.service.UserService;
+import com.tradepilot.core.dto.request.UserRegisterRequest;
+import com.tradepilot.core.dto.response.UserResponse;
+import com.tradepilot.core.dto.response.UserStatus;
+import com.tradepilot.core.mapper.UserMapper;
+import com.tradepilot.core.entity.User;
+import com.tradepilot.core.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

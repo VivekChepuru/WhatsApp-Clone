@@ -1,7 +1,7 @@
-package com.messenger.whatsappclone.mapper;
+package com.tradepilot.core.mapper;
 
-import com.messenger.whatsappclone.dto.response.MessageResponse;
-import com.messenger.whatsappclone.entity.Message;
+import com.tradepilot.core.dto.response.MessageResponse;
+import com.tradepilot.core.entity.Message;
 
 public class MessageMapper {
     public static MessageResponse toResponse(Message message) {

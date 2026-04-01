@@ -1,6 +1,6 @@
-package com.messenger.whatsappclone.repository;
+package com.tradepilot.core.repository;
 
-import com.messenger.whatsappclone.entity.Message;
+import com.tradepilot.core.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

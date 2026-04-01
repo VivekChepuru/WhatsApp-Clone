@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.config;
+package com.tradepilot.core.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -1,8 +1,8 @@
-package com.messenger.whatsappclone.service;
+package com.tradepilot.core.service;
 
-import com.messenger.whatsappclone.dto.request.UserRegisterRequest;
-import com.messenger.whatsappclone.dto.response.UserStatus;
-import com.messenger.whatsappclone.entity.User;
+import com.tradepilot.core.dto.request.UserRegisterRequest;
+import com.tradepilot.core.dto.response.UserStatus;
+import com.tradepilot.core.entity.User;
 
 import java.util.List;
 import java.util.Optional;

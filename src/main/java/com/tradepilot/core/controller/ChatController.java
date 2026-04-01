@@ -1,9 +1,9 @@
-package com.messenger.whatsappclone.controller;
+package com.tradepilot.core.controller;
 
-import com.messenger.whatsappclone.dto.request.ChatCreateRequest;
-import com.messenger.whatsappclone.dto.response.ChatResponse;
-import com.messenger.whatsappclone.entity.Chat;
-import com.messenger.whatsappclone.service.ChatService;
+import com.tradepilot.core.dto.request.ChatCreateRequest;
+import com.tradepilot.core.dto.response.ChatResponse;
+import com.tradepilot.core.entity.Chat;
+import com.tradepilot.core.service.ChatService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

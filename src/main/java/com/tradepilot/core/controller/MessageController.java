@@ -1,13 +1,13 @@
-package com.messenger.whatsappclone.controller;
+package com.tradepilot.core.controller;
 
-import com.messenger.whatsappclone.dto.request.MessageCreateRequest;
-import com.messenger.whatsappclone.dto.response.MessageResponse;
-import com.messenger.whatsappclone.dto.websocket.WebSocketMessageDTO;
-import com.messenger.whatsappclone.entity.Message;
-import com.messenger.whatsappclone.entity.User;
-import com.messenger.whatsappclone.mapper.MessageMapper;
-import com.messenger.whatsappclone.repository.UserRepository;
-import com.messenger.whatsappclone.service.MessageService;
+import com.tradepilot.core.dto.request.MessageCreateRequest;
+import com.tradepilot.core.dto.response.MessageResponse;
+import com.tradepilot.core.dto.websocket.WebSocketMessageDTO;
+import com.tradepilot.core.entity.Message;
+import com.tradepilot.core.entity.User;
+import com.tradepilot.core.mapper.MessageMapper;
+import com.tradepilot.core.repository.UserRepository;
+import com.tradepilot.core.service.MessageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

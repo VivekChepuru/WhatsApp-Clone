@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.messenger</groupId>
-	<artifactId>whatsapp-clone</artifactId>
+	<artifactId>tradepilot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>whatsapp-clone</name>
+	<name>tradepilot-core</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

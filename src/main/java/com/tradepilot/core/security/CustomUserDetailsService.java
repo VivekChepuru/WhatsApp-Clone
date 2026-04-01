@@ -1,7 +1,7 @@
-package com.messenger.whatsappclone.security;
+package com.tradepilot.core.security;
 
-import com.messenger.whatsappclone.entity.User;
-import com.messenger.whatsappclone.repository.UserRepository;
+import com.tradepilot.core.entity.User;
+import com.tradepilot.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package com.messenger.whatsappclone.dto.request;
+package com.tradepilot.core.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

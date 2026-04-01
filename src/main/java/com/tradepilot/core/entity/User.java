@@ -1,7 +1,7 @@
-package com.messenger.whatsappclone.entity;
+package com.tradepilot.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.messenger.whatsappclone.dto.response.UserStatus;
+import com.tradepilot.core.dto.response.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
